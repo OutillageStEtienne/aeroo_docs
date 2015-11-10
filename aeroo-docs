@@ -35,13 +35,13 @@ import sys
 from jsonrpc2 import JsonRpcApplication
 from wsgiref.simple_server import make_server
 from os import path, listdir, mkdir, stat, unlink, kill, remove
-from signal import SIGQUIT
+#from signal import SIGQUIT
 from threading import Thread, Event
 from time import time, sleep
 
 from aeroo_docs_fncs import OfficeService
 
-from daemonize import Daemonize
+#from daemonize import Daemonize
 import logging
 
 #### Prepare spool directory
@@ -345,8 +345,8 @@ formatter = logging.Formatter(format)
 if hasattr(args, 'log_file'):
     if not path.exists(args.log_file):
         log_dir = path.dirname(args.log_file)
-        if not path.exists(log_dir):
-            mkdir(log_dir, mode=0o0700)
+    #    if not path.exists(log_dir):
+    #        mkdir(log_dir, mode=0o0700)
     filehandler = logging.FileHandler(args.log_file)
     PRESERVE_FH.append(filehandler.stream.fileno())
     filehandler.setLevel(logging.DEBUG)
