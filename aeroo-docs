@@ -76,12 +76,25 @@ top_parser.add_argument('-h', '--help', action='store_const', const=True,
 top_parser.add_argument('-v', '--version', action='version',
                         version='%(prog)s 1.0')
 
+conf_parser = ArgumentParser(add_help=False)
+conf_parser.add_argument('-c', '--config-file', type=str,
+                    help='Read configuration from file. If no file exists, \
+                    asks user if generic configuration file should be created \
+                    at the given location.')
+args, remaining_argv = conf_parser.parse_known_args()
+
+if args.config_file:
+    config_file = ConfigParser()
+    config_file.read(args.config_file)
+    conf.update(dict(config_file.items('start')))
+
 start_parser = ArgumentParser(add_help=False)
+
 start_parser.add_argument('-c', '--config-file', type=str,
                     help='Read configuration from file. If no file exists, \
                     asks user if generic configuration file should be created \
                     at the given location.')
-
+                    
 start_parser.add_argument('-i', '--interface', type=str,
                     default=conf['interface'],
                     help='Interface, this service will bind to and listen.\
@@ -335,6 +348,8 @@ if hasattr(args, 'config_file') and args.config_file is not None:
                       'permission denied.' % args.config_file)
                 sys.exit()
                 
+
+
 if hasattr(args, 'spool_directory'):
     SPOOL_PATH = args.spool_directory + '/%s'
 
@@ -342,6 +357,7 @@ logger = logging.getLogger('main')
 logger.setLevel(logging.DEBUG)
 format = '%(asctime)s - %(threadName)s - %(levelname)s - %(message)s'
 formatter = logging.Formatter(format)
+
 if hasattr(args, 'log_file'):
     if not path.exists(args.log_file):
         log_dir = path.dirname(args.log_file)
